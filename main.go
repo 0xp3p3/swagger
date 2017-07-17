@@ -7,8 +7,8 @@ import (
 	"github.com/yvasiyarov/swagger/generator"
 )
 
-var apiPackage = flag.String("apiPackage", "", "The package that implements the API controllers, relative to $GOPATH/src")
-var mainApiFile = flag.String("mainApiFile", "", "The file that contains the general API annotations, relative to $GOPATH/src")
+var apiPackage = flag.String("apiPackage", "", "The package that implements the API controllers, relative to $SWAGGERAPIPATH or $GOPATH/src")
+var mainApiFile = flag.String("mainApiFile", "", "The file that contains the general API annotations, relative to $SWAGGERAPIPATH or $GOPATH/src")
 var outputFormat = flag.String("format", "go", "Output format type for the generated files: "+generator.AVAILABLE_FORMATS)
 var outputSpec = flag.String("output", "", "Output (path) for the generated file(s)")
 var controllerClass = flag.String("controllerClass", "", "Speed up parsing by specifying which receiver objects have the controller methods")
@@ -38,7 +38,7 @@ func main() {
 		Ignore:          *ignore,
 		ContentsTable:   *contentsTable,
 		Models:          *models,
-		VendoringPath:	 *vendoringPath,
+		VendoringPath:   *vendoringPath,
 	}
 
 	err := generator.Run(params)

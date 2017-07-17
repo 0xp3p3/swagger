@@ -2,6 +2,7 @@ package parser
 
 import (
 	"encoding/json"
+	"fmt"
 	"go/ast"
 	goparser "go/parser"
 	"go/token"
@@ -11,7 +12,6 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
-	"fmt"
 )
 
 var vendoringPath string
@@ -125,7 +125,6 @@ func (parser *Parser) CheckRealPackagePath(packagePath string) string {
 		}
 	}
 
-
 	// first check vendor folder, vendoring in GO 1.7 and greater is officially supported
 	// evaluate if the user specified a different vendor directory rather
 	// than using current working directory to find vendor
@@ -140,6 +139,24 @@ func (parser *Parser) CheckRealPackagePath(packagePath string) string {
 		if evalutedPath, err := filepath.EvalSymlinks(vendorPath); err == nil {
 			if _, err := os.Stat(evalutedPath); err == nil {
 				pkgRealpath = evalutedPath
+			}
+		}
+	}
+
+	// next, check SWAGGERAPIPATH
+	if pkgRealpath == "" {
+		swaggerpath := os.Getenv("SWAGGERAPIPATH")
+		if swaggerpath == "" {
+			log.Fatalf("Please, set $SWAGGERAPIPATH environment variable\n")
+		}
+
+		swaggerpathsList := filepath.SplitList(swaggerpath)
+		for _, path := range swaggerpathsList {
+			if evalutedPath, err := filepath.EvalSymlinks(filepath.Join(path, packagePath)); err == nil {
+				if _, err := os.Stat(evalutedPath); err == nil {
+					pkgRealpath = evalutedPath
+					break
+				}
 			}
 		}
 	}

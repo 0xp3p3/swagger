@@ -56,3 +56,8 @@ The main difference between this tool and Beego is that this generator doesn't d
 4. To run the generated swagger UI (assuming you used -format="go"), copy/move the generated docs.go file to a new folder under GOPATH/src. Also bring in the web.go-example file, renaming it to web.go. Then: **go run web.go docs.go**
 
 5. Enjoy it :-)
+
+6. From TianDaGe
+    I wanted to make apiPackage and mainApiFile paths  with my customize directory, so i added $SWAGGERAPIPATH
+
+    export SWAGGERAPIPATH={your package path}
