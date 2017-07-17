@@ -104,8 +104,9 @@ func (parser *Parser) GetApiDescriptionJson() []byte {
 }
 
 func (parser *Parser) CheckRealPackagePath(packagePath string) string {
-	packagePath = strings.Trim(packagePath, "\"")
+	log.Println("here")
 
+	packagePath = strings.Trim(packagePath, "\"")
 	if cachedResult, ok := parser.PackagePathCache[packagePath]; ok {
 		return cachedResult
 	}
@@ -149,8 +150,9 @@ func (parser *Parser) CheckRealPackagePath(packagePath string) string {
 		if swaggerpath == "" {
 			log.Fatalf("Please, set $SWAGGERAPIPATH environment variable\n")
 		}
-
 		swaggerpathsList := filepath.SplitList(swaggerpath)
+		log.Fatalf(swaggerpathsList[0])
+		log.Fatalf(packagePath)
 		for _, path := range swaggerpathsList {
 			if evalutedPath, err := filepath.EvalSymlinks(filepath.Join(path, packagePath)); err == nil {
 				if _, err := os.Stat(evalutedPath); err == nil {

@@ -141,7 +141,7 @@ func InitParser(controllerClass, ignore string) *parser.Parser {
 
 type Params struct {
 	ApiPackage, MainApiFile, OutputFormat, OutputSpec, ControllerClass, Ignore, VendoringPath string
-	ContentsTable, Models                                                      bool
+	ContentsTable, Models                                                                     bool
 }
 
 func Run(params Params) error {
@@ -151,7 +151,7 @@ func Run(params Params) error {
 		return errors.New("Please, set $GOPATH environment variable\n")
 	}
 
-	log.Println("Start parsing")
+	log.Println("Start parsing---")
 
 	//Support gopaths with multiple directories
 	dirs := strings.Split(gopath, ":")
