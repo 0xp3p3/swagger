@@ -106,7 +106,11 @@ func (parser *Parser) GetApiDescriptionJson() []byte {
 func (parser *Parser) CheckRealPackagePath(packagePath string, realPath ...string) string {
 	//fmt.Println(packagePath)
 	packagePath = strings.Trim(packagePath, "\"")
-	if cachedResult, ok := parser.PackagePathCache[packagePath]; ok {
+
+	packagePathKey := strings.Trim(packagePath, "../")
+	packagePathKey = strings.Trim(packagePathKey, "./")
+
+	if cachedResult, ok := parser.PackagePathCache[packagePathKey]; ok {
 		return cachedResult
 	}
 
@@ -208,7 +212,7 @@ func (parser *Parser) CheckRealPackagePath(packagePath string, realPath ...strin
 		}
 	}
 
-	parser.PackagePathCache[packagePath] = pkgRealpath
+	parser.PackagePathCache[packagePathKey] = pkgRealpath
 	return pkgRealpath
 }
 
