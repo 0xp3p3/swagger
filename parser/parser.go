@@ -103,9 +103,8 @@ func (parser *Parser) GetApiDescriptionJson() []byte {
 	return json
 }
 
-func (parser *Parser) CheckRealPackagePath(packagePath string) string {
-	log.Println("here")
-
+func (parser *Parser) CheckRealPackagePath(packagePath string, realPath ...string) string {
+	//fmt.Println(packagePath)
 	packagePath = strings.Trim(packagePath, "\"")
 	if cachedResult, ok := parser.PackagePathCache[packagePath]; ok {
 		return cachedResult
@@ -144,6 +143,14 @@ func (parser *Parser) CheckRealPackagePath(packagePath string) string {
 		}
 	}
 
+	if realPath != nil && realPath[0] != "" {
+		if evalutedPath, err := filepath.EvalSymlinks(filepath.Join(realPath[0], packagePath)); err == nil {
+			if _, err := os.Stat(evalutedPath); err == nil {
+				pkgRealpath = evalutedPath
+			}
+		}
+	}
+
 	// next, check SWAGGERAPIPATH
 	if pkgRealpath == "" {
 		swaggerpath := os.Getenv("SWAGGERAPIPATH")
@@ -151,8 +158,6 @@ func (parser *Parser) CheckRealPackagePath(packagePath string) string {
 			log.Fatalf("Please, set $SWAGGERAPIPATH environment variable\n")
 		}
 		swaggerpathsList := filepath.SplitList(swaggerpath)
-		log.Fatalf(swaggerpathsList[0])
-		log.Fatalf(packagePath)
 		for _, path := range swaggerpathsList {
 			if evalutedPath, err := filepath.EvalSymlinks(filepath.Join(path, packagePath)); err == nil {
 				if _, err := os.Stat(evalutedPath); err == nil {
@@ -207,8 +212,12 @@ func (parser *Parser) CheckRealPackagePath(packagePath string) string {
 	return pkgRealpath
 }
 
-func (parser *Parser) GetRealPackagePath(packagePath string) string {
-	pkgRealpath := parser.CheckRealPackagePath(packagePath)
+func (parser *Parser) GetRealPackagePath(packagePath string, realPath ...string) string {
+	pkgRealpath := ""
+	if realPath != nil && realPath[0] != "" {
+		pkgRealpath = parser.CheckRealPackagePath(packagePath, realPath[0])
+	}
+	pkgRealpath = parser.CheckRealPackagePath(packagePath)
 	if pkgRealpath == "" {
 		log.Fatalf("Can not find package %s \n", packagePath)
 	}
@@ -362,7 +371,7 @@ func (parser *Parser) ParseImportStatements(packageName string) map[string]bool 
 			for _, astImport := range astFile.Imports {
 				importedPackageName := strings.Trim(astImport.Path.Value, "\"")
 				if !parser.isIgnoredPackage(importedPackageName) {
-					realPath := parser.GetRealPackagePath(importedPackageName)
+					realPath := parser.GetRealPackagePath(importedPackageName, pkgRealPath)
 					//log.Printf("path: %#v, original path: %#v", realPath, astImport.Path.Value)
 					if _, ok := parser.TypeDefinitions[realPath]; !ok {
 						imports[importedPackageName] = true

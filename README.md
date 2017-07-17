@@ -16,18 +16,18 @@ The main difference between this tool and Beego is that this generator doesn't d
 <br>
 
 
-####Project Status : [Alpha](https://github.com/yvasiyarov/swagger/wiki/Declarative-Comments-Format)
-####Declarative Comments Format : [Read more ](https://github.com/yvasiyarov/swagger/wiki/Declarative-Comments-Format)
-####Technical Notes : [Read More ](https://github.com/yvasiyarov/swagger/wiki/Technical-Notes)
-####Known Limitations : [Read More ](https://github.com/yvasiyarov/swagger/wiki/Known-Limitations)
+####Project Status : [Alpha](https://github.com/TianDaGe/swagger/wiki/Declarative-Comments-Format)
+####Declarative Comments Format : [Read more ](https://github.com/TianDaGe/swagger/wiki/Declarative-Comments-Format)
+####Technical Notes : [Read More ](https://github.com/TianDaGe/swagger/wiki/Technical-Notes)
+####Known Limitations : [Read More ](https://github.com/TianDaGe/swagger/wiki/Known-Limitations)
 
 <br>
 #### Quick Start Guide
 
 
-1. Add comments to your API source code, [see Declarative Comments Format ](https://github.com/yvasiyarov/swagger/wiki/Declarative-Comments-Format)
+1. Add comments to your API source code, [see Declarative Comments Format ](https://github.com/TianDaGe/swagger/wiki/Declarative-Comments-Format)
 
-2. Download Swagger for Go by using ````go get github.com/yvasiyarov/swagger````
+2. Download Swagger for Go by using ````go get github.com/TianDaGe/swagger````
 
 3. Or, compile the Swagger generator from sources.
     `go install`
@@ -49,7 +49,7 @@ The main difference between this tool and Beego is that this generator doesn't d
     * **-models**       - Generate 'Models' section, default value is true, if set '-models=false' it will not generate the section.
     * **-vendoringPath** - Specify the vendoring directory instead of using current working directory
 
- [**You can Generate different formats** ](https://github.com/yvasiyarov/swagger/wiki/Generate-Different-Formats)
+ [**You can Generate different formats** ](https://github.com/TianDaGe/swagger/wiki/Generate-Different-Formats)
 
    <br>
 

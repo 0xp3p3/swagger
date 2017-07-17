@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-	"github.com/yvasiyarov/swagger/parser"
+	"github.com/TianDaGe/swagger/parser"
 )
 
 type OperationSuite struct {

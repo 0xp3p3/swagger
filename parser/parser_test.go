@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-	"github.com/yvasiyarov/swagger/parser"
+	"github.com/TianDaGe/swagger/parser"
 	"go/ast"
 	//	"log"
 	"os"
@@ -44,8 +44,8 @@ func (suite *ParserSuite) SetupSuite() {
 			suite.T().Fatalf("Please, set $GOPATH environment variable\n")
 		}
 
-		initialisedParser2.ParseGeneralApiInfo(path.Join(gopath, "src", "github.com/yvasiyarov/swagger/example/web/main.go"))
-		initialisedParser2.ParseApi("github.com/yvasiyarov/swagger/example")
+		initialisedParser2.ParseGeneralApiInfo(path.Join(gopath, "src", "github.com/TianDaGe/swagger/example/web/main.go"))
+		initialisedParser2.ParseApi("github.com/TianDaGe/swagger/example")
 	}
 	suite.parser = initialisedParser2
 }
@@ -149,7 +149,7 @@ func (suite *ParserSuite) CheckGetStringByInt(op *parser.Operation) {
 func (suite *ParserSuite) CheckGetStructByInt(op *parser.Operation) {
 	assert.Equal(suite.T(), "GET", op.HttpMethod, "Http method not parsed")
 	assert.Equal(suite.T(), "GetStructByInt", op.Nickname, "Nickname not parsed")
-	assert.Equal(suite.T(), "github.com.yvasiyarov.swagger.example.StructureWithEmbededStructure", op.Type, "Type not parsed")
+	assert.Equal(suite.T(), "github.com.TianDaGe.swagger.example.StructureWithEmbededStructure", op.Type, "Type not parsed")
 
 	assert.Equal(suite.T(), op.Path, "/testapi/get-struct-by-int/{some_id}", "Resource path invalid")
 
@@ -166,7 +166,7 @@ func (suite *ParserSuite) CheckGetStructByInt(op *parser.Operation) {
 func (suite *ParserSuite) CheckGetStruct2ByInt(op *parser.Operation) {
 	assert.Equal(suite.T(), "GET", op.HttpMethod, "Http method not parsed")
 	assert.Equal(suite.T(), "GetStruct2ByInt", op.Nickname, "Nickname not parsed")
-	assert.Equal(suite.T(), "github.com.yvasiyarov.swagger.example.StructureWithEmbededPointer", op.Type, "Type not parsed")
+	assert.Equal(suite.T(), "github.com.TianDaGe.swagger.example.StructureWithEmbededPointer", op.Type, "Type not parsed")
 
 	assert.Equal(suite.T(), op.Path, "/testapi/get-struct2-by-int/{some_id}", "Resource path invalid")
 
@@ -202,7 +202,7 @@ func (suite *ParserSuite) CheckGetStructArrayByString(op *parser.Operation) {
 	assert.Equal(suite.T(), "GET", op.HttpMethod, "Http method not parsed")
 	assert.Equal(suite.T(), "GetStructArrayByString", op.Nickname, "Nickname not parsed")
 	assert.Equal(suite.T(), "array", op.Type, "Type not parsed")
-	assert.Equal(suite.T(), "github.com.yvasiyarov.swagger.example.SimpleStructureWithAnnotations", op.Items.Ref, "Type not parsed")
+	assert.Equal(suite.T(), "github.com.TianDaGe.swagger.example.SimpleStructureWithAnnotations", op.Items.Ref, "Type not parsed")
 
 	assert.Equal(suite.T(), op.Path, "/testapi/get-struct-array-by-string/{some_id}", "Resource path invalid")
 
@@ -219,7 +219,7 @@ func (suite *ParserSuite) CheckGetStructArrayByString(op *parser.Operation) {
 func (suite *ParserSuite) CheckGetInterface(op *parser.Operation) {
 	assert.Equal(suite.T(), "GET", op.HttpMethod, "Http method not parsed")
 	assert.Equal(suite.T(), "GetInterface", op.Nickname, "Nickname not parsed")
-	assert.Equal(suite.T(), "github.com.yvasiyarov.swagger.example.InterfaceType", op.Type, "Type not parsed")
+	assert.Equal(suite.T(), "github.com.TianDaGe.swagger.example.InterfaceType", op.Type, "Type not parsed")
 
 	assert.Equal(suite.T(), op.Path, "/testapi/get-interface", "Resource path invalid")
 
@@ -252,7 +252,7 @@ func (suite *ParserSuite) CheckGetArrayOfInterfaces(op *parser.Operation) {
 	assert.Equal(suite.T(), "GET", op.HttpMethod, "Http method not parsed")
 	assert.Equal(suite.T(), "GetArrayOfInterfaces", op.Nickname, "Nickname not parsed")
 	assert.Equal(suite.T(), "array", op.Type, "Type not parsed")
-	assert.Equal(suite.T(), "github.com.yvasiyarov.swagger.example.InterfaceType", op.Items.Ref, "Type not parsed")
+	assert.Equal(suite.T(), "github.com.TianDaGe.swagger.example.InterfaceType", op.Items.Ref, "Type not parsed")
 
 	assert.Equal(suite.T(), op.Path, "/testapi/get-array-of-interfaces", "Resource path invalid")
 
@@ -268,7 +268,7 @@ func (suite *ParserSuite) CheckGetArrayOfInterfaces(op *parser.Operation) {
 func (suite *ParserSuite) CheckGetStruct3(op *parser.Operation) {
 	assert.Equal(suite.T(), "GET", op.HttpMethod, "Http method not parsed")
 	assert.Equal(suite.T(), "GetStruct3", op.Nickname, "Nickname not parsed")
-	assert.Equal(suite.T(), "github.com.yvasiyarov.swagger.example.StructureWithSlice", op.Type, "Type not parsed")
+	assert.Equal(suite.T(), "github.com.TianDaGe.swagger.example.StructureWithSlice", op.Type, "Type not parsed")
 
 	assert.Equal(suite.T(), op.Path, "/testapi/get-struct3", "Resource path invalid")
 
@@ -287,22 +287,22 @@ func (suite *ParserSuite) CheckModelList(topApi *parser.ApiDeclaration) {
 
 	for _, model := range topApi.Models {
 		switch model.Id {
-		case "github.com.yvasiyarov.swagger.example.APIError":
+		case "github.com.TianDaGe.swagger.example.APIError":
 			assert.Len(suite.T(), model.Properties, 2, "Model not parsed correctly")
 
-		case "github.com.yvasiyarov.swagger.example.InterfaceType":
+		case "github.com.TianDaGe.swagger.example.InterfaceType":
 			assert.Len(suite.T(), model.Properties, 0, "Model not parsed correctly")
 
-		case "github.com.yvasiyarov.swagger.example.StructureWithEmbededPointer":
+		case "github.com.TianDaGe.swagger.example.StructureWithEmbededPointer":
 			assert.Len(suite.T(), model.Properties, 2, "Model not parsed correctly")
 
-		case "github.com.yvasiyarov.swagger.example.StructureWithEmbededStructure":
+		case "github.com.TianDaGe.swagger.example.StructureWithEmbededStructure":
 			assert.Len(suite.T(), model.Properties, 2, "Model not parsed correctly")
 
-		case "github.com.yvasiyarov.swagger.example.StructureWithSlice":
+		case "github.com.TianDaGe.swagger.example.StructureWithSlice":
 			assert.Len(suite.T(), model.Properties, 2, "Model not parsed correctly")
 
-		case "github.com.yvasiyarov.swagger.example.SimpleStructureWithAnnotations":
+		case "github.com.TianDaGe.swagger.example.SimpleStructureWithAnnotations":
 			assert.Len(suite.T(), model.Properties, 2, "Model not parsed correctly")
 
 		default:

@@ -13,8 +13,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/yvasiyarov/swagger/markup"
-	"github.com/yvasiyarov/swagger/parser"
+	"github.com/TianDaGe/swagger/markup"
+	"github.com/TianDaGe/swagger/parser"
 )
 
 const (
@@ -151,7 +151,7 @@ func Run(params Params) error {
 		return errors.New("Please, set $GOPATH environment variable\n")
 	}
 
-	log.Println("Start parsing---")
+	log.Println("Start parsing")
 
 	//Support gopaths with multiple directories
 	dirs := strings.Split(gopath, ":")
