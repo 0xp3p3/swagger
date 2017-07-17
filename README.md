@@ -57,7 +57,7 @@ The main difference between this tool and Beego is that this generator doesn't d
 
 5. Enjoy it :-)
 
-6. From TianDaGe
+6. From TianDaGe <br>
     I wanted to make apiPackage and mainApiFile paths  with my customize directory, so i added $SWAGGERAPIPATH
 
-    export SWAGGERAPIPATH={your package path}
+    `export SWAGGERAPIPATH={your package path}`
