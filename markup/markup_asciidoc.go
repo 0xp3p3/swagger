@@ -42,7 +42,7 @@ func (this *MarkupAsciiDoc) tableHeader(tableTitle string) string {
 	if tableTitle != "" {
 		retval += fmt.Sprintf(".%s\n", tableTitle)
 	}
-	return retval + "[width=\"60%\",options=\"header\"]\n|==========\n"
+	return retval + "[width=\"90%\",options=\"header\"]\n|==========\n"
 }
 
 // tableHeader ends a table
