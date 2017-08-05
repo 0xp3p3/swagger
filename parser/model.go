@@ -91,7 +91,7 @@ func (m *Model) ParseModel(modelName string, currentPackage string, knownModelNa
 				//log.Printf("innerModelList: %#v\n, typeInnerModels: %#v, usedTypes: %#v \n", innerModelList, typeInnerModels, usedTypes)
 			}
 		}
-		//log.Printf("After parse inner model list: %#v\n (%s)", usedTypes, modelName)
+		// log.Printf("After parse inner model list: %#v\n (%s)", usedTypes, modelName)
 		// log.Fatalf("Inner model list: %#v\n", innerModelList)
 
 	}
@@ -107,12 +107,12 @@ func (m *Model) ParseFieldList(fieldList []*ast.Field, modelPackage string) {
 	//log.Printf("ParseFieldList\n")
 
 	m.Properties = make(map[string]*ModelProperty)
-	for _, field := range fieldList {
-		m.ParseModelProperty(field, modelPackage)
+	for i, field := range fieldList {
+		m.ParseModelProperty(i, field, modelPackage)
 	}
 }
 
-func (m *Model) ParseModelProperty(field *ast.Field, modelPackage string) {
+func (m *Model) ParseModelProperty(index int, field *ast.Field, modelPackage string) {
 	var name string
 	var innerModel *Model
 
@@ -131,6 +131,10 @@ func (m *Model) ParseModelProperty(field *ast.Field, modelPackage string) {
 		property.SetItemType(typeAsString[2:])
 	} else if typeAsString == "time.Time" {
 		property.Type = "Time"
+	} else if typeAsString == "bson.ObjectId" {
+		property.Type = "ObjectId(string)"
+	} else if typeAsString == "omit" {
+		property.Type = "omit"
 	} else {
 		property.Type = typeAsString
 	}
@@ -163,7 +167,7 @@ func (m *Model) ParseModelProperty(field *ast.Field, modelPackage string) {
 			m.Properties[innerFieldName] = innerField
 		}
 
-		//log.Fatalf("Here %#v\n", field.Type)
+		// log.Fatalf("Here %#v\n", field.Type)
 		return
 	} else {
 		name = field.Names[0].Name
@@ -203,48 +207,59 @@ func (m *Model) ParseModelProperty(field *ast.Field, modelPackage string) {
 			property.Description = desc
 		}
 	}
+
+	if p, ok := m.Properties[name]; !ok {
+		property.Order = index
+	} else {
+		property.Order = p.Order
+	}
 	m.Properties[name] = property
 }
 
 type ModelProperty struct {
+	Order       int
 	Type        string             `json:"type"`
 	Description string             `json:"description"`
 	Items       ModelPropertyItems `json:"items,omitempty"`
 	Format      string             `json:"format"`
 }
+
 type ModelPropertyItems struct {
 	Ref  string `json:"$ref,omitempty"`
 	Type string `json:"type,omitempty"`
 }
 
 func NewModelProperty() *ModelProperty {
-	return &ModelProperty{}
+	return &ModelProperty{Order: -1}
 }
 
 // refer to builtin.go
 var basicTypes = map[string]bool{
-	"bool":       true,
-	"uint":       true,
-	"uint8":      true,
-	"uint16":     true,
-	"uint32":     true,
-	"uint64":     true,
-	"int":        true,
-	"int8":       true,
-	"int16":      true,
-	"int32":      true,
-	"int64":      true,
-	"float32":    true,
-	"float64":    true,
-	"string":     true,
-	"complex64":  true,
-	"complex128": true,
-	"byte":       true,
-	"rune":       true,
-	"uintptr":    true,
-	"error":      true,
-	"Time":       true,
-	"file":       true,
+	"bool":             true,
+	"uint":             true,
+	"uint8":            true,
+	"uint16":           true,
+	"uint32":           true,
+	"uint64":           true,
+	"int":              true,
+	"int8":             true,
+	"int16":            true,
+	"int32":            true,
+	"int64":            true,
+	"float32":          true,
+	"float64":          true,
+	"string":           true,
+	"complex64":        true,
+	"complex128":       true,
+	"byte":             true,
+	"rune":             true,
+	"uintptr":          true,
+	"error":            true,
+	"Time":             true,
+	"file":             true,
+	"omit":             true,
+	"omit(bool)":       true,
+	"ObjectId(string)": true,
 }
 
 var typeDefTranslations = map[string]string{}
@@ -284,6 +299,10 @@ func (p *ModelProperty) GetTypeAsString(fieldType interface{}) string {
 		} else {
 			//			log.Printf("Get type as string(no star expression)! %#v , type: %s\n", fieldType, fmt.Sprint(fieldType))
 			realType = fmt.Sprint(fieldType)
+			relationRegex, _ := regexp.Compile("^[A-Z].*")
+			if relationRegex.MatchString(realType) {
+				realType = "interface"
+			}
 		}
 	}
 	return realType

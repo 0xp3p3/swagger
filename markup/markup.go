@@ -61,17 +61,18 @@ func GenerateMarkup(parser *parser.Parser, markup Markup, outputSpec *string, de
 	/***************************************************************
 	* Table of Contents (List of Sub-APIs)
 	***************************************************************/
+	subApiKeys, subApiKeyIndex := alphabeticalKeysOfSubApis(parser.Listing.Apis)
 	if tableContents {
 		buf.WriteString("Table of Contents\n\n")
-		subApiKeys, subApiKeyIndex := alphabeticalKeysOfSubApis(parser.Listing.Apis)
+		//subApiKeys, subApiKeyIndex := alphabeticalKeysOfSubApis(parser.Listing.Apis)
 		for _, subApiKey := range subApiKeys {
 			buf.WriteString(markup.numberedItem(1, markup.link(subApiKey, parser.Listing.Apis[subApiKeyIndex[subApiKey]].Description)))
 		}
 		buf.WriteString("\n")
 	}
 
-	for _, apiKey := range alphabeticalKeysOfApiDeclaration(parser.TopLevelApis) {
-
+	//for _, apiKey := range alphabeticalKeysOfApiDeclaration(parser.TopLevelApis) {
+	for _, apiKey := range subApiKeys {
 		apiDescription := parser.TopLevelApis[apiKey]
 		/***************************************************************
 		* Sub-API Specifications
@@ -160,9 +161,12 @@ func GenerateMarkup(parser *parser.Parser, markup Markup, outputSpec *string, de
 				}
 				buf.WriteString(markup.sectionHeader(4, markup.colorSpan(shortModelName(modelKey), color_MODEL_TEXT, color_NORMAL_BACKGROUND)))
 				buf.WriteString(markup.tableHeader(""))
-				buf.WriteString(markup.tableHeaderRow("Field Name (alphabetical)", "Field Type", "Description"))
-				for _, fieldName := range alphabeticalKeysOfFields(model.Properties) {
+				buf.WriteString(markup.tableHeaderRow("Field Name", "Field Type", "Description"))
+				for _, fieldName := range arrayKeysOfFields(model.Properties) {
 					fieldProps := model.Properties[fieldName]
+					if fieldProps.Type == "omit" {
+						continue
+					}
 					buf.WriteString(markup.tableRow(fieldName, fieldProps.Type, fieldProps.Description))
 				}
 				buf.WriteString(markup.tableFooter())
@@ -198,9 +202,10 @@ func alphabeticalKeysOfSubApis(refs []*parser.ApiRef) ([]string, map[string]int)
 		keys[i] = subApiKey
 		index[subApiKey] = i
 	}
-	sort.Strings(keys)
+	// sort.Strings(keys)
 	return keys, index
 }
+
 func alphabeticalKeysOfApiDeclaration(m map[string]*parser.ApiDeclaration) []string {
 	keys := make([]string, len(m))
 	i := 0
@@ -229,6 +234,14 @@ func alphabeticalKeysOfFields(m map[string]*parser.ModelProperty) []string {
 		i++
 	}
 	sort.Strings(keys)
+	return keys
+}
+func arrayKeysOfFields(m map[string]*parser.ModelProperty) []string {
+	keys := make([]string, len(m))
+	for key, p := range m {
+		keys[p.Order] = key
+	}
+	//sort.Strings(keys)
 	return keys
 }
 
