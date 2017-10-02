@@ -235,10 +235,10 @@ func (parser *Parser) GetPackageAst(packagePath string) map[string]*ast.Package 
 		return cache
 	} else {
 		fileSet := token.NewFileSet()
-
 		astPackages, err := goparser.ParseDir(fileSet, packagePath, ParserFileFilter, goparser.ParseComments)
 		if err != nil {
-			log.Fatalf("Parse of %s pkg cause error: %s\n", packagePath, err)
+			// log.Fatalf("Parse of %s pkg cause error: %s\n", packagePath, err)
+			return nil
 		}
 		parser.PackagesCache[packagePath] = astPackages
 		return astPackages
@@ -339,6 +339,9 @@ func (parser *Parser) ParseTypeDefinitions(packageName string) {
 	}
 
 	astPackages := parser.GetPackageAst(pkgRealPath)
+	if astPackages == nil {
+		return
+	}
 	for _, astPackage := range astPackages {
 		for _, astFile := range astPackage.Files {
 			for _, astDeclaration := range astFile.Decls {
@@ -368,6 +371,9 @@ func (parser *Parser) ParseImportStatements(packageName string) map[string]bool 
 
 	imports := make(map[string]bool)
 	astPackages := parser.GetPackageAst(pkgRealPath)
+	if astPackages == nil {
+		return imports
+	}
 
 	parser.PackageImports[pkgRealPath] = make(map[string][]string)
 	for _, astPackage := range astPackages {
@@ -478,6 +484,10 @@ func (parser *Parser) ParseApiDescription(packageName string) {
 	pkgRealPath := parser.GetRealPackagePath(packageName)
 
 	astPackages := parser.GetPackageAst(pkgRealPath)
+	if astPackages == nil {
+		return
+	}
+
 	for _, astPackage := range astPackages {
 		for _, astFile := range astPackage.Files {
 			for _, astDescription := range astFile.Decls {
